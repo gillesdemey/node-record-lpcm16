@@ -1,0 +1,26 @@
+{
+  "name": "node-sox-lpcm16",
+  "version": "0.1.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "lodash": "^2.4.1",
+    "lodash-node": "^2.4.1",
+    "request": "^2.34.0",
+    "wheatley-formatters": "git://github.com/aperturescience/wheatley-formatters.git"
+  },
+  "devDependencies": {
+    "mocha": "^1.18.2"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "keywords": [
+    "sox",
+    "audio",
+    "speech",
+    "record"
+  ],
+  "author": "Gilles De Mey",
+  "license": "MIT"
+}
