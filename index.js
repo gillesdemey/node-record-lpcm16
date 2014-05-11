@@ -32,7 +32,7 @@ exports.record = function (options, callback) {
                '1','1.0', options.threshold + '%'
   ];
 
-  console.log('Recording...');
+  console.log('Recording with sample rate', options.sampleRate, '…');
 
   var rec = spawn(cmd, cmdArgs, 'pipe');
 
