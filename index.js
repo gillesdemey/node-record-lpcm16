@@ -17,13 +17,18 @@ exports.record = function (options, callback) {
   options = _.merge(options, defaults);
 
   // capture audio stream
-  var cmd = 'sox';
+  var cmd = 'rec';
   var cmdArgs = [
-    '-q',
-    '-b','16',
-    '-d','-t','wav','-',
-    'rate','16000','channels','1',
-    'silence','1','0.1',(options.threshold || '0.1')+'%','1','1.0',(options.threshold || '0.1')+'%'
+    '-q',                     // show no progress
+    '-r', '16000',            // sample rate
+    '-c', '1',                // channels
+    '-e', 'signed-integer',   // sample encoding
+    '-b', '16',               // precision (bits)
+    '-t', 'wav',              // audio type
+    '-',                      // pipe
+                              // end on silence
+    'silence', '1','0.1', (options.threshold || '0.1') + '%',
+               '1','1.0', (options.threshold || '0.1') + '%'
   ];
 
   console.log('Recording...');
