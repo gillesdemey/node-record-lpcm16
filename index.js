@@ -1,13 +1,12 @@
-var _   = require('lodash-node'),
- zlib   = require('zlib'),
- fs     = require('fs'),
- exec   = require('child_process').exec,
- format = require('wheatley-formatters');
+var _      = require('lodash-node'),
+    zlib   = require('zlib'),
+    spawn  = require('child_process').spawn;
 
 exports.record = function (options, callback) {
 
+  var recording = '';
+
   var defaults = {
-    bits: 16,
     sampleRate: 16000,
     compress: false
   };
@@ -15,32 +14,29 @@ exports.record = function (options, callback) {
   options = _.merge(options, defaults);
 
   // capture audio stream
-  var cmd = 'rec --encoding signed-integer --bits 16 --channels 1 --rate 16000 -p silence 1 0.50 0.1% 1 00:01 0.1% | sox -p --encoding signed-integer --bits 16 -t wav - ';
-  // cmd = util.format(cmd, options.bits, options.sampleRate, file);
+  var cmd = 'sox';
+  var cmdArgs = [
+    '-q',
+    '-b','16',
+    '-d','-t','wav','-',
+    'rate','16000','channels','1',
+    'silence','1','0.1',(options.threshold || '0.1')+'%','1','1.0',(options.threshold || '0.1')+'%'
+  ];
 
   console.log('Recording...');
 
-  exec(cmd, function (err, stdout, stderr) {
+  var rec = spawn(cmd, cmdArgs, 'pipe');
 
-    if (err) callback(err);
+  // process stdout
+  rec.stdout.setEncoding('binary');
+  rec.stdout.on('data', function (data) {
+    console.log('Receiving data...');
+    recording += data;
+  });
 
-    // TODO: make sure not to pass the 15 seconds threshold
-
-    var buff = new Buffer(stdout);
-    console.log('Uncompressed buffer size:', format.bytes(buff.length));
-
-    var shouldCompress = options.compress;
-
-    if (!shouldCompress) {
-      callback(null, buff);
-      return;
-    }
-
-    exports.compress(buff, function (err, compressed) {
-      if (err) callback(err);
-      callback(null, compressed);
-    });
-
+  // exit recording
+  rec.on('close', function (code) {
+    callback(null, recording);
   });
 
 };
@@ -53,7 +49,7 @@ exports.compress = function (input, callback) {
   zlib.gzip(input, function (err, result) {
 
     console.timeEnd('Compressed');
-    console.log('Compressed size:', format.bytes(result.length));
+    console.log('Compressed size:', result.length, 'bytes');
 
     if (err) callback(err);
 
