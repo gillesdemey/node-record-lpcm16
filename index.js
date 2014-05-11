@@ -11,6 +11,9 @@ exports.record = function (options, callback) {
     compress: false
   };
 
+  if (_.isFunction(options))
+    callback = options;
+
   options = _.merge(options, defaults);
 
   // capture audio stream
