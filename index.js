@@ -7,8 +7,9 @@ exports.record = function (options, callback) {
   var recording = '';
 
   var defaults = {
-    sampleRate: 16000,
-    compress: false
+    sampleRate : 16000,
+    compress   : false,
+    threshold  : 0.1
   };
 
   if (_.isFunction(options))
@@ -27,8 +28,8 @@ exports.record = function (options, callback) {
     '-t', 'wav',              // audio type
     '-',                      // pipe
                               // end on silence
-    'silence', '1','0.1', (options.threshold || '0.1') + '%',
-               '1','1.0', (options.threshold || '0.1') + '%'
+    'silence', '1','0.1', options.threshold + '%',
+               '1','1.0', options.threshold + '%'
   ];
 
   console.log('Recording...');
