@@ -36,7 +36,8 @@ exports.record = function (options, callback) {
 
   // exit recording
   rec.on('close', function (code) {
-    callback(null, recording);
+    var buff = new Buffer(recording, 'binary');
+    callback(null, buff);
   });
 
 };
