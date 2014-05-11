@@ -15,7 +15,7 @@ exports.record = function (options, callback) {
   if (_.isFunction(options))
     callback = options;
 
-  options = _.merge(options, defaults);
+  options = _.extend(defaults, options);
 
   // capture audio stream
   var cmd = 'rec';
