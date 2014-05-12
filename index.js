@@ -1,25 +1,26 @@
 'use strict';
 
-var _      = require('lodash-node'),
-    zlib   = require('zlib'),
-    spawn  = require('child_process').spawn;
+var _        = require('lodash-node'),
+    spawn    = require('child_process').spawn,
+    stream   = require('stream');
 
-exports.record = function (options, callback) {
 
-  var recording = '';
+var recording = new stream.PassThrough(); // Create the passthrough audio stream
+var rec; // Recording process
+
+// returns a Readable stream
+exports.start = function (options) {
 
   var defaults = {
     sampleRate : 16000,
     compress   : false,
-    threshold  : 0.1
+    threshold  : 0.5,
+    verbose    : false
   };
-
-  if (_.isFunction(options))
-    callback = options;
 
   options = _.extend(defaults, options);
 
-  // capture audio stream
+  // Capture audio stream
   var cmd = 'rec';
   var cmdArgs = [
     '-q',                     // show no progress
@@ -34,39 +35,45 @@ exports.record = function (options, callback) {
                '1','1.0', options.threshold + '%'
   ];
 
-  console.log('Recording with sample rate', options.sampleRate, '…');
+  if (options.verbose)
+    console.log('Recording with sample rate', options.sampleRate + '...');
 
-  var rec = spawn(cmd, cmdArgs, 'pipe');
+  // Spawn audio capture command
+  rec = spawn(cmd, cmdArgs);
 
-  // process stdout
+  if (options.verbose)
+    console.time('End Recording');
+
+  // Set stdout to binary encoding
   rec.stdout.setEncoding('binary');
+
+  // Fill recording stream with stdout
   rec.stdout.on('data', function (data) {
-    console.log('Receiving data...');
-    recording += data;
+
+    if (options.verbose)
+      console.log('Recording %d bytes', data.length);
+
+    recording.write(new Buffer(data, 'binary')); // convert to binary buffer
   });
 
-  // exit recording
-  rec.on('close', function (code) {
-    var buff = new Buffer(recording, 'binary');
-    callback(null, buff);
+  // Verbose ending
+  rec.stdout.on('end', function () {
+
+    if (options.verbose)
+      console.timeEnd('End Recording');
+
+    recording.end();
   });
+
+  return recording;
 
 };
 
-exports.compress = function (input, callback) {
+exports.stop = function () {
 
-  console.log('Compressing...');
-  console.time('Compressed');
+  if (typeof rec === 'undefined')
+    console.log('Please start a recording first');
 
-  zlib.gzip(input, function (err, result) {
-
-    console.timeEnd('Compressed');
-    console.log('Compressed size:', result.length, 'bytes');
-
-    if (err) callback(err);
-
-    callback(null, result);
-
-  });
-
+ rec.kill(); // Exit the spawned process, exit gracefully
+ return recording;
 };
