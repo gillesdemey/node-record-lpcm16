@@ -7,7 +7,7 @@ var _        = require('lodash-node'),
 // returns a Readable stream
 exports.record = function (options) {
 
-  var recording = new stream.Readable(); // Create the readable audio stream
+  var recording = new stream.PassThrough(); // Create the passthrough audio stream
 
   var defaults = {
     sampleRate : 16000,
@@ -42,18 +42,15 @@ exports.record = function (options) {
 
   // Fill recording stream with stdout
   rec.stdout.on('data', function (data) {
-    console.log('Recording...', data.length);
-    recording.push(new Buffer(data, 'binary')); // convert to binary buffer
+    console.log('Recording...');
+    recording.write(new Buffer(data, 'binary')); // convert to binary buffer
   });
 
   // Verbose ending
   rec.stdout.on('end', function () {
     console.log('done');
+    recording.end();
   });
-
-  recording._read = function () {
-
-  };
 
   return recording;
 
