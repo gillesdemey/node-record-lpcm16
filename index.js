@@ -1,3 +1,5 @@
+'use strict';
+
 var _      = require('lodash-node'),
     zlib   = require('zlib'),
     spawn  = require('child_process').spawn;
