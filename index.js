@@ -12,7 +12,8 @@ exports.record = function (options) {
   var defaults = {
     sampleRate : 16000,
     compress   : false,
-    threshold  : 0.1
+    threshold  : 0.1,
+    verbose    : false
   };
 
   options = _.extend(defaults, options);
@@ -32,23 +33,33 @@ exports.record = function (options) {
                '1','1.0', options.threshold + '%'
   ];
 
-  console.log('Recording with sample rate', options.sampleRate + '...');
+  if (options.verbose)
+    console.log('Recording with sample rate', options.sampleRate + '...');
 
   // Spawn audio capture command
   var rec = spawn(cmd, cmdArgs);
+
+  if (options.verbose)
+    console.time('End Recording');
 
   // Set stdout to binary encoding
   rec.stdout.setEncoding('binary');
 
   // Fill recording stream with stdout
   rec.stdout.on('data', function (data) {
-    console.log('Recording...');
+
+    if (options.verbose)
+      console.log('Recording %d bytes', data.length);
+
     recording.write(new Buffer(data, 'binary')); // convert to binary buffer
   });
 
   // Verbose ending
   rec.stdout.on('end', function () {
-    console.log('done');
+
+    if (options.verbose)
+      console.timeEnd('End Recording');
+
     recording.end();
   });
 
