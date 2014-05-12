@@ -1,7 +1,7 @@
 'use strict';
 
 var record = require('../index.js'),
-    fs    = require('fs');
+    fs     = require('fs');
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
 
