@@ -4,14 +4,14 @@ var _      = require('lodash-node'),
     zlib   = require('zlib'),
     spawn  = require('child_process').spawn;
 
-exports.start = function (options, callback) {
+exports.record = function (options, callback) {
 
   var recording = '';
 
   var defaults = {
     sampleRate : 16000,
     compress   : false,
-    threshold  : 0.5
+    threshold  : 0.1
   };
 
   if (_.isFunction(options))
