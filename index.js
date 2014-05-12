@@ -1,21 +1,19 @@
 'use strict';
 
-var _      = require('lodash-node'),
-    zlib   = require('zlib'),
-    spawn  = require('child_process').spawn;
+var _        = require('lodash-node'),
+    spawn    = require('child_process').spawn,
+    stream   = require('stream');
 
-exports.record = function (options, callback) {
+// returns a Readable stream
+exports.record = function (options) {
 
-  var recording = '';
+  var recording = new stream.Readable();
 
   var defaults = {
     sampleRate : 16000,
     compress   : false,
     threshold  : 0.1
   };
-
-  if (_.isFunction(options))
-    callback = options;
 
   options = _.extend(defaults, options);
 
@@ -34,39 +32,25 @@ exports.record = function (options, callback) {
                '1','1.0', options.threshold + '%'
   ];
 
-  console.log('Recording with sample rate', options.sampleRate, '…');
+  console.log('Recording with sample rate', options.sampleRate + '...');
 
-  var rec = spawn(cmd, cmdArgs, 'pipe');
+  var rec = spawn(cmd, cmdArgs);
 
   // process stdout
   rec.stdout.setEncoding('binary');
+
   rec.stdout.on('data', function (data) {
-    console.log('Receiving data...');
-    recording += data;
+    console.log('Recording %d bytes of data', data.length);
+    recording.push(new Buffer(data, 'binary'));
   });
 
-  // exit recording
-  rec.on('close', function (code) {
-    var buff = new Buffer(recording, 'binary');
-    callback(null, buff);
+  rec.stdout.on('end', function () {
+    console.log('done');
   });
 
-};
+  recording._read = function () {
+  };
 
-exports.compress = function (input, callback) {
-
-  console.log('Compressing...');
-  console.time('Compressed');
-
-  zlib.gzip(input, function (err, result) {
-
-    console.timeEnd('Compressed');
-    console.log('Compressed size:', result.length, 'bytes');
-
-    if (err) callback(err);
-
-    callback(null, result);
-
-  });
+  return recording;
 
 };
