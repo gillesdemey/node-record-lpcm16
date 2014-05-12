@@ -51,3 +51,7 @@ node_modules
 
 # Test files
 *.wav
+
+#sublime text files
+*.sublime-project
+*.sublime-workspace
