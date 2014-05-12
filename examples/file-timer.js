@@ -5,8 +5,9 @@ var record = require('../index.js'),
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
 
-record.start({
-  sampleRate : 44100,
-  verbose : true
-})
-.pipe(file);
+record.start();
+
+// Stop recording after three seconds and write to file
+setTimeout(function () {
+  record.stop().pipe(file);
+}, 3000);

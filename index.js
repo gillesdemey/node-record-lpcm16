@@ -4,10 +4,12 @@ var _        = require('lodash-node'),
     spawn    = require('child_process').spawn,
     stream   = require('stream');
 
-// returns a Readable stream
-exports.record = function (options) {
 
-  var recording = new stream.PassThrough(); // Create the passthrough audio stream
+var recording = new stream.PassThrough(); // Create the passthrough audio stream
+var rec; // Recording process
+
+// returns a Readable stream
+exports.start = function (options) {
 
   var defaults = {
     sampleRate : 16000,
@@ -37,7 +39,7 @@ exports.record = function (options) {
     console.log('Recording with sample rate', options.sampleRate + '...');
 
   // Spawn audio capture command
-  var rec = spawn(cmd, cmdArgs);
+  rec = spawn(cmd, cmdArgs);
 
   if (options.verbose)
     console.time('End Recording');
@@ -65,4 +67,13 @@ exports.record = function (options) {
 
   return recording;
 
+};
+
+exports.stop = function () {
+
+  if (typeof rec === 'undefined')
+    console.log('Please start a recording first');
+
+ rec.kill(); // Exit the spawned process, exit gracefully
+ return recording;
 };
