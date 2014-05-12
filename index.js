@@ -12,7 +12,7 @@ exports.record = function (options) {
   var defaults = {
     sampleRate : 16000,
     compress   : false,
-    threshold  : 0.1,
+    threshold  : 0.5,
     verbose    : false
   };
 
