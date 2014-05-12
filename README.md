@@ -9,6 +9,10 @@ This module uses Node.js streams to minimize memory usage and optimize speed, pe
 
 These audio files are fully compatible with both the [Google Speech to Text API (v2)](https://github.com/gillesdemey/google-speech-v2) and the [Wit.ai Speech API](https://wit.ai/docs/api#span-classtitle-verb-postspeech).
 
+Don't like streams? Nostalgic for Ye Olde Callbacks?
+
+Check out the [no-streams branch](https://github.com/gillesdemey/node-record-lpcm16/tree/no-streams) for all your callback needs.
+
 ## Options
 
 ```
