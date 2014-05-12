@@ -5,4 +5,8 @@ var rec = require('../index.js'),
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
 
-rec.record({ sampleRate: 44100, verbose: true }).pipe(file);
+rec.record({
+  sampleRate : 44100,
+  verbose : true
+})
+.pipe(file);
