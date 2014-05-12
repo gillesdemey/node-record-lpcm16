@@ -13,6 +13,21 @@ Don't like streams? Nostalgic for Ye Olde Callbacks?
 
 Check out the [no-streams branch](https://github.com/gillesdemey/node-record-lpcm16/tree/no-streams) for all your callback needs.
 
+## Dependencies
+
+Generally, running `npm install` should suffice.
+
+This module however, requires you to install [SoX](http://sox.sourceforge.net).
+
+### For Mac OS
+`brew install sox`
+
+### For most linux disto's
+`sudo apt-get install sox libsox-fmt-all`
+
+### For Windows
+[download the binaries](http://sourceforge.net/projects/sox/files/sox/14.4.1/)
+
 ## Options
 
 ```
