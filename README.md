@@ -82,7 +82,7 @@ exports.parseResult = function (err, resp, body) {
   console.log(body);
 };
 
-rec.record().pipe(request.post({
+rec.start().pipe(request.post({
   'url'     : 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
   'headers' : {
     'Accept'        : 'application/vnd.wit.20160202+json',
