@@ -13,6 +13,10 @@ Don't like streams? Nostalgic for Ye Olde Callbacks?
 
 Check out the [no-streams branch](https://github.com/gillesdemey/node-record-lpcm16/tree/no-streams) for all your callback needs.
 
+## Installation
+
+`npm install node-record-lpcm16`
+
 ## Dependencies
 
 Generally, running `npm install` should suffice.
