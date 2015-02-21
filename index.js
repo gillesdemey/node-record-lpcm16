@@ -5,13 +5,13 @@ var _        = require('lodash-node'),
     stream   = require('stream');
 
 
-var recording = null; // Create the passthrough audio stream
-var rec; // Recording process
+var recording, // Will hold our passthrough audio stream
+    rec;       // Recording process
 
 // returns a Readable stream
 exports.start = function (options) {
-  recording = new stream.PassThrough();
-  rec = null;
+  recording = new stream.PassThrough(); // Create the passthrough audio stream
+  rec = null; // Empty out possibly dead recording process
   
   var defaults = {
     sampleRate : 16000,
