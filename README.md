@@ -3,7 +3,7 @@ Record 16-bit WAVE audio with Node.js
 
 ## Description
 
-Records a 16-bit signed-integer linear pulse modification code WAV audio file.
+Records a 16-bit signed-integer linear pulse modulation code WAV audio file.
 
 This module uses Node.js streams to minimize memory usage and optimize speed, perfect for embedded devices and "the internet of things".
 
