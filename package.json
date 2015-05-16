@@ -4,10 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {
-    "lodash": "^2.4.1",
-    "lodash-node": "^2.4.1",
-    "request": "^2.34.0",
-    "wheatley-formatters": "git://github.com/aperturescience/wheatley-formatters.git"
+    "lodash": "^2.4.1"
   },
   "devDependencies": {
     "mocha": "^1.18.2"

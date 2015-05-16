@@ -1,6 +1,6 @@
 'use strict';
 
-var _        = require('lodash-node'),
+var _        = require('lodash'),
     spawn    = require('child_process').spawn,
     stream   = require('stream');
 
@@ -12,7 +12,7 @@ var recording, // Will hold our passthrough audio stream
 exports.start = function (options) {
   recording = new stream.PassThrough(); // Create the passthrough audio stream
   rec = null; // Empty out possibly dead recording process
-  
+
   var defaults = {
     sampleRate : 16000,
     compress   : false,
