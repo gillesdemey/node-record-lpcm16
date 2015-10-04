@@ -48,6 +48,8 @@ exports.start = function (options) {
             '-q',                     // show no progress
             '-r', '16000',            // sample rate
             '-c', '1',                // channels
+            '-t', 'wav',              // audio type
+            '-f', 'S16_LE',           // Sample format
             '-',                      // pipe
         ];
       break;
