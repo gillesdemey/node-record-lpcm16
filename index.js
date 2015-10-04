@@ -17,25 +17,41 @@ exports.start = function (options) {
     sampleRate : 16000,
     compress   : false,
     threshold  : 0.5,
-    verbose    : false
+    verbose    : false,
+    recordProgram : 'rec'
   };
 
   options = _.extend(defaults, options);
 
   // Capture audio stream
-  var cmd = 'rec';
-  var cmdArgs = [
-    '-q',                     // show no progress
-    '-r', '16000',            // sample rate
-    '-c', '1',                // channels
-    '-e', 'signed-integer',   // sample encoding
-    '-b', '16',               // precision (bits)
-    '-t', 'wav',              // audio type
-    '-',                      // pipe
-                              // end on silence
-    'silence', '1','0.1', options.threshold + '%',
-               '1','1.0', options.threshold + '%'
-  ];
+  var cmd, cmdArgs;
+  switch (options.recordProgram) {
+    case 'rec':
+    default:
+        cmd = 'rec';
+        cmdArgs = [
+            '-q',                     // show no progress
+            '-r', '16000',            // sample rate
+            '-c', '1',                // channels
+            '-e', 'signed-integer',   // sample encoding
+            '-b', '16',               // precision (bits)
+            '-t', 'wav',              // audio type
+            '-',                      // pipe
+            // end on silence
+            'silence', '1','0.1', options.threshold + '%',
+            '1','1.0', options.threshold + '%'
+        ];
+      break;
+    case 'arecord':
+        cmd = 'arecord';
+        cmdArgs = [
+            '-q',                     // show no progress
+            '-r', '16000',            // sample rate
+            '-c', '1',                // channels
+            '-',                      // pipe
+        ];
+      break;
+  }
 
   if (options.verbose)
     console.log('Recording with sample rate', options.sampleRate + '...');
