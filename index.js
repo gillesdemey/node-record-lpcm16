@@ -17,7 +17,8 @@ exports.start = function (options) {
     sampleRate : 16000,
     compress   : false,
     threshold  : 0.5,
-    verbose    : false
+    verbose    : false,
+    exitOnSilence: '3.0'
   };
 
   options = _.extend(defaults, options);
@@ -33,8 +34,8 @@ exports.start = function (options) {
     '-t', 'wav',              // audio type
     '-',                      // pipe
                               // end on silence
-    'silence', '1','0.1', options.threshold + '%',
-               '1','1.0', options.threshold + '%'
+    'silence', '1', '0.1', options.threshold + '%',
+               '1', options.exitOnSilence, options.threshold + '%'
   ];
 
   if (options.verbose)
