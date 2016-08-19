@@ -1,7 +1,6 @@
 'use strict';
 
-var _        = require('lodash'),
-    spawn    = require('child_process').spawn,
+var spawn    = require('child_process').spawn,
     stream   = require('stream');
 
 
@@ -20,7 +19,10 @@ exports.start = function (options) {
     verbose    : false
   };
 
-  options = _.extend(defaults, options);
+  for (var property in defaults) {
+    if (!options.hasOwnProperty(property))
+      options[property] = defaults[property];
+  }
 
   // Capture audio stream
   var cmd = 'rec';
