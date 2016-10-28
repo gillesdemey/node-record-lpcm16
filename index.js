@@ -16,7 +16,7 @@ exports.start = function (options) {
   var defaults = {
     sampleRate : 16000,
     compress   : false,
-    threshold  : 0.5,
+    silence    : '1 0.1 0.5% 1 1.0 0.5%',
     verbose    : false
   };
 
@@ -32,10 +32,9 @@ exports.start = function (options) {
     '-b', '16',               // precision (bits)
     '-t', 'wav',              // audio type
     '-',                      // pipe
-                              // end on silence
-    'silence', '1','0.1', options.threshold + '%',
-               '1','1.0', options.threshold + '%'
   ];
+  // end on silence
+  cmdArgs.push(...['silence'].concat(options.silence.split(' ')));
 
   if (options.verbose)
     console.log('Recording with sample rate', options.sampleRate + '...');
@@ -55,7 +54,8 @@ exports.start = function (options) {
     if (options.verbose)
       console.log('Recording %d bytes', data.length);
 
-    recording.write(new Buffer(data, 'binary')); // convert to binary buffer
+    if (!recording._readableState.ended)
+      recording.write(new Buffer(data, 'binary')); // convert to binary buffer
   });
 
   // Verbose ending
