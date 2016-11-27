@@ -38,7 +38,7 @@ This module however, requires you to install [SoX](http://sox.sourceforge.net).
 sampleRate    : 16000  // audio sample rate
 threshold     : 0.5    // silence threshold (rec only)
 verbose       : false  // log info to the console
-recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord'
+recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
 ```
 
 Please not that arecord might not work on all operating systems

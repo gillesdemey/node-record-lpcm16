@@ -25,9 +25,12 @@ exports.start = function (options) {
   // Capture audio stream
   var cmd, cmdArgs;
   switch (options.recordProgram) {
+    // On some Windows machines, sox is installed using the "sox" binary
+    // instead of "rec"
+    case 'sox':
     case 'rec':
     default:
-        cmd = 'rec';
+        cmd = options.recordProgram;
         cmdArgs = [
             '-q',                     // show no progress
             '-r', '16000',            // sample rate
@@ -41,6 +44,7 @@ exports.start = function (options) {
             '1','1.0', options.threshold + '%'
         ];
       break;
+    // On some systems (RasPi), arecord is the prefered recording binary
     case 'arecord':
         cmd = 'arecord';
         cmdArgs = [
