@@ -3,9 +3,6 @@
   "version": "0.1.4",
   "description": "",
   "main": "index.js",
-  "dependencies": {
-    "lodash": "^2.4.1"
-  },
   "devDependencies": {
     "mocha": "^1.18.2"
   },
