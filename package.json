@@ -1,6 +1,6 @@
 {
   "name": "node-record-lpcm16",
-  "version": "0.1.4",
+  "version": "0.1.5",
   "description": "",
   "main": "index.js",
   "dependencies": {
@@ -9,8 +9,7 @@
   "devDependencies": {
     "mocha": "^1.18.2"
   },
-  "scripts": {
-  },
+  "scripts": {},
   "keywords": [
     "sox",
     "audio",
