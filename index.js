@@ -5,7 +5,7 @@ var execa     = require('execa'),
 
 
 var recording, // Will hold our passthrough audio stream
-    rec;       // Recording process
+    cp;        // Recording process
 
 // returns a Readable stream
 exports.start = function (options) {
@@ -62,7 +62,8 @@ exports.start = function (options) {
     console.log('Recording with sample rate', options.sampleRate + '...');
 
   // Spawn audio capture command
-  rec = execa(cmd, cmdArgs, { encoding: 'binary' }).stdout;
+  cp = execa(cmd, cmdArgs, { encoding: 'binary' })
+  var rec = cp.stdout;
 
   if (options.verbose)
     console.time('End Recording');
@@ -90,12 +91,12 @@ exports.start = function (options) {
 };
 
 exports.stop = function () {
-  if (typeof rec === 'undefined')
+  if (typeof cp === 'undefined')
   {
     console.log('Please start a recording first');
     return false;
   }
 
- rec.kill(); // Exit the spawned process, exit gracefully
+ cp.kill(); // Exit the spawned process, exit gracefully
  return recording;
 };
