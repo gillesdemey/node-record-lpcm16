@@ -1,7 +1,6 @@
 'use strict';
 
-var _        = require('lodash'),
-    spawn    = require('child_process').spawn,
+var spawn    = require('child_process').spawn,
     stream   = require('stream');
 
 
@@ -21,7 +20,7 @@ exports.start = function (options) {
     recordProgram : 'rec'
   };
 
-  options = _.extend(defaults, options);
+  options = Object.assign(defaults, options);
 
   // Capture audio stream
   var cmd, cmdArgs;
