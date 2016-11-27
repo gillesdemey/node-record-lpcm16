@@ -33,7 +33,7 @@ exports.start = function (options) {
         cmd = options.recordProgram;
         cmdArgs = [
             '-q',                     // show no progress
-            '-r', '16000',            // sample rate
+            '-r', options.sampleRate, // sample rate
             '-c', '1',                // channels
             '-e', 'signed-integer',   // sample encoding
             '-b', '16',               // precision (bits)
@@ -49,7 +49,7 @@ exports.start = function (options) {
         cmd = 'arecord';
         cmdArgs = [
             '-q',                     // show no progress
-            '-r', '16000',            // sample rate
+            '-r', options.sampleRate, // sample rate
             '-c', '1',                // channels
             '-t', 'wav',              // audio type
             '-f', 'S16_LE',           // Sample format
