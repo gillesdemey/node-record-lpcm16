@@ -3,7 +3,9 @@
   "version": "0.1.4",
   "description": "",
   "main": "index.js",
-  "dependencies": {},
+  "dependencies": {
+    "execa": "^0.5.0"
+  },
   "devDependencies": {
     "mocha": "^1.18.2"
   },

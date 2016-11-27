@@ -1,7 +1,7 @@
 'use strict';
 
-var spawn    = require('child_process').spawn,
-    stream   = require('stream');
+var execa     = require('execa'),
+    stream    = require('stream');
 
 
 var recording, // Will hold our passthrough audio stream
@@ -62,16 +62,13 @@ exports.start = function (options) {
     console.log('Recording with sample rate', options.sampleRate + '...');
 
   // Spawn audio capture command
-  rec = spawn(cmd, cmdArgs);
+  rec = execa(cmd, cmdArgs, { encoding: 'binary' }).stdout;
 
   if (options.verbose)
     console.time('End Recording');
 
-  // Set stdout to binary encoding
-  rec.stdout.setEncoding('binary');
-
   // Fill recording stream with stdout
-  rec.stdout.on('data', function (data) {
+  rec.on('data', function (data) {
 
     if (options.verbose)
       console.log('Recording %d bytes', data.length);
@@ -80,7 +77,7 @@ exports.start = function (options) {
   });
 
   // Verbose ending
-  rec.stdout.on('end', function () {
+  rec.on('end', function () {
 
     if (options.verbose)
       console.timeEnd('End Recording');
