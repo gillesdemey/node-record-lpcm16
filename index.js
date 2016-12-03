@@ -1,6 +1,6 @@
 'use strict';
 
-var execa     = require('execa'),
+var spawn     = require('child_process').spawn,
     stream    = require('stream');
 
 
@@ -62,7 +62,7 @@ exports.start = function (options) {
     console.log('Recording with sample rate', options.sampleRate + '...');
 
   // Spawn audio capture command
-  cp = execa(cmd, cmdArgs, { encoding: 'binary' })
+  cp = spawn(cmd, cmdArgs, { encoding: 'binary' })
   var rec = cp.stdout;
 
   if (options.verbose)
