@@ -1,13 +1,13 @@
-'use strict';
+'use strict'
 
-var record = require('../index.js'),
-    fs     = require('fs');
+var record = require('../')
+var fs = require('fs')
 
-var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
+var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start();
+record.start().pipe(file)
 
 // Stop recording after three seconds and write to file
 setTimeout(function () {
-  record.stop().pipe(file);
-}, 3000);
+  record.stop()
+}, 3000)
