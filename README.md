@@ -1,17 +1,10 @@
-Record 16-bit WAVE audio with Node.js
-===============
-
-## Description
+# node-record-lpcm-16
 
 Records a 16-bit signed-integer linear pulse modulation code WAV audio file.
 
 This module uses Node.js streams to minimize memory usage and optimize speed, perfect for embedded devices and "the internet of things".
 
 These audio files are fully compatible with both the [Google Speech to Text API (v2)](https://github.com/gillesdemey/google-speech-v2) and the [Wit.ai Speech API](https://wit.ai/docs/api#span-classtitle-verb-postspeech).
-
-Don't like streams? Nostalgic for Ye Olde Callbacks?
-
-Check out the [no-streams branch](https://github.com/gillesdemey/node-record-lpcm16/tree/no-streams) for all your callback needs.
 
 ## Installation
 
@@ -21,7 +14,7 @@ Check out the [no-streams branch](https://github.com/gillesdemey/node-record-lpc
 
 Generally, running `npm install` should suffice.
 
-This module however, requires you to install [SoX](http://sox.sourceforge.net).
+This module requires you to install [SoX](http://sox.sourceforge.net) and it must be available in your `$PATH`.
 
 ### For Mac OS
 `brew install sox`
@@ -41,37 +34,37 @@ verbose       : false  // log info to the console
 recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
 ```
 
-Please not that arecord might not work on all operating systems
+Please not that `arecord` might not work on all operating systems
 
 ## Usage
 
 ```javascript
-var record = require('node-record-lpcm16'),
-    fs     = require('fs');
+var record = require('node-record-lpcm16')
+var fs = require('fs')
 
-var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
+var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
 record.start({
   sampleRate : 44100,
   verbose : true
 })
-.pipe(file);
+.pipe(file)
 ```
 
 The library will automatically attempt to stop when it encounters silence, if not you can stop the recording manually.
 
 ```javascript
-var record = require('../index.js'),
-    fs     = require('fs');
+var record = require('node-record-lpcm-16')
+var fs = require('fs')
 
-var file = fs.createWriteStream('test.wav', { encoding: 'binary' });
+var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start();
+record.start().pipe(file)
 
-// Stop recording after three seconds and write to file
+// Stop recording after three seconds
 setTimeout(function () {
-  record.stop().pipe(file);
-}, 3000);
+  record.stop()
+}, 3000)
 ```
 This module uses Node.js streams, if you're unfamiliar with them I'd suggest reading Substack's excellent [stream handbook](https://github.com/substack/stream-handbook).
 
@@ -80,14 +73,14 @@ This module uses Node.js streams, if you're unfamiliar with them I'd suggest rea
 Here's how you can write your own Siri in just 10 lines of code.
 
 ```javascript
-var rec       = require('node-record-lpcm16'),
-    request   = require('request');
+var rec = require('node-record-lpcm16')
+var request = require('request')
 
 var witToken = process.env.WIT_TOKEN; // get one from wit.ai!
 
 exports.parseResult = function (err, resp, body) {
-  console.log(body);
-};
+  console.log(body)
+}
 
 rec.start().pipe(request.post({
   'url'     : 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
@@ -96,5 +89,5 @@ rec.start().pipe(request.post({
     'Authorization' : 'Bearer ' + witToken,
     'Content-Type'  : 'audio/wav'
   }
-}, exports.parseResult));
+}, exports.parseResult))
 ```
