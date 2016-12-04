@@ -4,12 +4,10 @@ var spawn     = require('child_process').spawn,
     stream    = require('stream');
 
 
-var recording, // Will hold our passthrough audio stream
-    cp;        // Recording process
+var cp; // Recording process
 
 // returns a Readable stream
 exports.start = function (options) {
-  recording = new stream.PassThrough(); // Create the passthrough audio stream
   rec = null; // Empty out possibly dead recording process
 
   var defaults = {
@@ -73,8 +71,6 @@ exports.start = function (options) {
 
     if (options.verbose)
       console.log('Recording %d bytes', data.length);
-
-    recording.write(new Buffer(data, 'binary')); // convert to binary buffer
   });
 
   // Verbose ending
@@ -82,12 +78,9 @@ exports.start = function (options) {
 
     if (options.verbose)
       console.timeEnd('End Recording');
-
-    recording.end();
   });
 
-  return recording;
-
+  return rec;
 };
 
 exports.stop = function () {
@@ -98,5 +91,5 @@ exports.stop = function () {
   }
 
  cp.kill(); // Exit the spawned process, exit gracefully
- return recording;
+ return cp;
 };
