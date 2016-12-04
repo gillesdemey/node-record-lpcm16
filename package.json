@@ -4,9 +4,7 @@
   "description": "",
   "main": "index.js",
   "dependencies": {},
-  "devDependencies": {
-    "mocha": "^1.18.2"
-  },
+  "devDependencies": {},
   "scripts": {},
   "keywords": [
     "sox",
