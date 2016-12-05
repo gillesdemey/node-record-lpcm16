@@ -19,7 +19,7 @@ exports.start = function (options) {
   options = Object.assign(defaults, options)
 
   // Capture audio stream
-  var cmd, cmdArgs
+  var cmd, cmdArgs, cmdOptions
   switch (options.recordProgram) {
     // On some Windows machines, sox is installed using the "sox" binary
     // instead of "rec"
@@ -51,11 +51,18 @@ exports.start = function (options) {
         '-f', 'S16_LE',           // Sample format
         '-'                       // pipe
       ]
+      if (options.device) {
+        cmdArgs.unshift('-D', device)
+      }
       break
   }
 
   // Spawn audio capture command
-  cp = spawn(cmd, cmdArgs, { encoding: 'binary' })
+  cmdOptions = { encoding: 'binary' }
+  if (options.device) {
+    cmdOptions.env = { AUDIODEV: device }
+  }
+  cp = spawn(cmd, cmdArgs, cmdOptions)
   var rec = cp.stdout
 
   if (options.verbose) {
