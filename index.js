@@ -52,7 +52,7 @@ exports.start = function (options) {
         '-'                       // pipe
       ]
       if (options.device) {
-        cmdArgs.unshift('-D', device)
+        cmdArgs.unshift('-D', options.device)
       }
       break
   }
@@ -60,7 +60,7 @@ exports.start = function (options) {
   // Spawn audio capture command
   cmdOptions = { encoding: 'binary' }
   if (options.device) {
-    cmdOptions.env = { AUDIODEV: device }
+    cmdOptions.env = { AUDIODEV: options.device }
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
   var rec = cp.stdout
