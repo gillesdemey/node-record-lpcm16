@@ -60,7 +60,7 @@ exports.start = function (options) {
   // Spawn audio capture command
   cmdOptions = { encoding: 'binary' }
   if (options.device) {
-    cmdOptions.env = { AUDIODEV: options.device }
+    cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device })
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
   var rec = cp.stdout
