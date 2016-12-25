@@ -32,9 +32,10 @@ sampleRate    : 16000  // audio sample rate
 threshold     : 0.5    // silence threshold (rec only)
 verbose       : false  // log info to the console
 recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
+device        : null   // recording device (e.g.: 'plughw:1')
 ```
 
-Please not that `arecord` might not work on all operating systems
+> Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`). 
 
 ## Usage
 
@@ -54,7 +55,7 @@ record.start({
 The library will automatically attempt to stop when it encounters silence, if not you can stop the recording manually.
 
 ```javascript
-var record = require('node-record-lpcm-16')
+var record = require('node-record-lpcm16')
 var fs = require('fs')
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
