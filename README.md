@@ -30,12 +30,15 @@ This module requires you to install [SoX](http://sox.sourceforge.net) and it mus
 ```
 sampleRate    : 16000  // audio sample rate
 threshold     : 0.5    // silence threshold (rec only)
+thresholdStart: null   // silence threshold to start recording, overrides threshold (rec only)
+thresholdEnd  : null   // silence threshold to end recording, overrides threshold (rec only)
+silence       : '1.0'  // seconds of silence before ending
 verbose       : false  // log info to the console
 recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
 device        : null   // recording device (e.g.: 'plughw:1')
 ```
 
-> Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`). 
+> Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`).
 
 ## Usage
 
