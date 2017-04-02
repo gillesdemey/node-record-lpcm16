@@ -12,6 +12,9 @@ exports.start = function (options) {
     sampleRate: 16000,
     compress: false,
     threshold: 0.5,
+    thresholdStart: null,
+    thresholdEnd: null,
+    silence: '1.0',
     verbose: false,
     recordProgram: 'rec'
   }
@@ -36,8 +39,8 @@ exports.start = function (options) {
         '-t', 'wav',              // audio type
         '-',                      // pipe
             // end on silence
-        'silence', '1', '0.1', options.threshold + '%',
-        '1', '1.0', options.threshold + '%'
+        'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
+        '1', options.silence, options.thresholdEnd || options.threshold + '%'
       ]
       break
     // On some systems (RasPi), arecord is the prefered recording binary
