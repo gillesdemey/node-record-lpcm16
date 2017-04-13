@@ -16,7 +16,9 @@ exports.start = function (options) {
     thresholdEnd: null,
     silence: '1.0',
     verbose: false,
-    recordProgram: 'rec'
+    asRaw: false,
+    recordProgram: 'rec',
+    useSilence: true
   }
 
   options = Object.assign(defaults, options)
@@ -32,25 +34,32 @@ exports.start = function (options) {
       cmd = options.recordProgram
       cmdArgs = [
         '-q',                     // show no progress
-        '-r', options.sampleRate, // sample rate
+        '-t', 'waveaudio',
+        '-d',
+        '-r', options.sampleRate.toString(), // sample rate
         '-c', '1',                // channels
         '-e', 'signed-integer',   // sample encoding
         '-b', '16',               // precision (bits)
-        '-t', 'wav',              // audio type
-        '-',                      // pipe
-            // end on silence
-        'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
-        '1', options.silence, options.thresholdEnd || options.threshold + '%'
+        '-t', (options.asRaw ? 'raw' : 'wav'), // audio type
+        '-'                       // pipe
       ]
+      
+      if(options.useSilence) {
+        cmdArgs = cmdArgs.concat([
+          'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
+          '1', options.silence, options.thresholdEnd || options.threshold + '%'
+        ]);
+      }
+      
       break
     // On some systems (RasPi), arecord is the prefered recording binary
     case 'arecord':
       cmd = 'arecord'
       cmdArgs = [
         '-q',                     // show no progress
-        '-r', options.sampleRate, // sample rate
+        '-r', options.sampleRate.toString(), // sample rate
         '-c', '1',                // channels
-        '-t', 'wav',              // audio type
+        '-t', (options.asRaw ? 'raw' : 'wav'), // audio type
         '-f', 'S16_LE',           // Sample format
         '-'                       // pipe
       ]
@@ -67,6 +76,7 @@ exports.start = function (options) {
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
   var rec = cp.stdout
+  rec.setEncoding('binary');
 
   if (options.verbose) {
     console.log('Recording with sample rate', options.sampleRate + '...')
