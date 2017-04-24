@@ -66,22 +66,21 @@ exports.start = function (options) {
     cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device })
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
-  var rec = cp.stdout
 
   if (options.verbose) {
     console.log('Recording with sample rate', options.sampleRate + '...')
     console.time('End Recording')
 
-    rec.on('data', function (data) {
+    cp.stdout.on('data', function (data) {
       console.log('Recording %d bytes', data.length)
     })
 
-    rec.on('end', function () {
+    cp.stdout.on('end', function () {
       console.timeEnd('End Recording')
     })
   }
 
-  return rec
+  return cp
 }
 
 exports.stop = function () {
