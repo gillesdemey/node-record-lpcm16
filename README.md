@@ -52,7 +52,7 @@ record.start({
   sampleRate : 44100,
   verbose : true
 })
-.stdio
+.stdout
 .pipe(file)
 ```
 
@@ -64,7 +64,7 @@ var fs = require('fs')
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start().stdio.pipe(file)
+record.start().stdout.pipe(file)
 
 // Stop recording after three seconds
 setTimeout(function () {
@@ -87,7 +87,7 @@ exports.parseResult = function (err, resp, body) {
   console.log(body)
 }
 
-rec.start().stdio.pipe(request.post({
+rec.start().stdout.pipe(request.post({
   'url'     : 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
   'headers' : {
     'Accept'        : 'application/vnd.wit.20160202+json',
