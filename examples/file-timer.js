@@ -5,7 +5,7 @@ var fs = require('fs')
 
 var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start().pipe(file)
+record.start().stdout.pipe(file)
 
 // Stop recording after three seconds and write to file
 setTimeout(function () {

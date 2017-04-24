@@ -11,7 +11,7 @@ exports.parseResult = function (err, resp, body) {
 rec.start({
   verbose: true,
   recordProgram: 'arecord'
-}).pipe(request.post({
+}).stdout.pipe(request.post({
   'url': 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
   'headers': {
     'Accept': 'application/vnd.wit.20160202+json',

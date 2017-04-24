@@ -9,4 +9,5 @@ record.start({
   sampleRate: 44100,
   verbose: true
 })
+.stdout
 .pipe(file)
