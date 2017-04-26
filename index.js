@@ -81,6 +81,10 @@ exports.start = function (options) {
     })
   }
 
+  cp.stderr.on('data', function (data) {
+    rec.emit('error', data.toString())
+  })
+
   return rec
 }
 
