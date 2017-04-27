@@ -66,7 +66,12 @@ exports.start = function (options) {
     cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device })
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
+
   var rec = cp.stdout
+
+  cp.stderr.on('data', function (data) {
+    rec.emit('error', data.toString())
+  })
 
   if (options.verbose) {
     console.log('Recording with sample rate', options.sampleRate + '...')

@@ -52,6 +52,9 @@ record.start({
   sampleRate : 44100,
   verbose : true
 })
+.on('error', err => {
+  console.error('stderr said:', err)
+})
 .pipe(file)
 ```
 
