@@ -93,3 +93,21 @@ exports.stop = function () {
   cp.kill() // Exit the spawned process, exit gracefully
   return cp
 }
+
+exports.pause = function () {
+  if (!cp) {
+    console.log('Please start a recording first')
+    return false
+  }
+
+  cp.kill('SIGSTOP')
+}
+
+exports.resume = function() {
+  if (!cp) {
+    console.log('Please start a recording first')
+    return false
+  }
+  
+  cp.kill('SIGCONT')
+}
