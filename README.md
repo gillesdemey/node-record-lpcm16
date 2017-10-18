@@ -29,6 +29,7 @@ This module requires you to install [SoX](http://sox.sourceforge.net) and it mus
 
 ```
 sampleRate    : 16000  // audio sample rate
+channels      : 1      // number of channels
 threshold     : 0.5    // silence threshold (rec only)
 thresholdStart: null   // silence threshold to start recording, overrides threshold (rec only)
 thresholdEnd  : null   // silence threshold to end recording, overrides threshold (rec only)
