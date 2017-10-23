@@ -10,6 +10,7 @@ exports.start = function (options) {
 
   var defaults = {
     sampleRate: 16000,
+    channels: 1,
     compress: false,
     threshold: 0.5,
     thresholdStart: null,
@@ -33,7 +34,7 @@ exports.start = function (options) {
       cmdArgs = [
         '-q',                     // show no progress
         '-r', options.sampleRate, // sample rate
-        '-c', '1',                // channels
+        '-c', options.channels,   // channels
         '-e', 'signed-integer',   // sample encoding
         '-b', '16',               // precision (bits)
         '-t', 'wav',              // audio type
@@ -49,7 +50,7 @@ exports.start = function (options) {
       cmdArgs = [
         '-q',                     // show no progress
         '-r', options.sampleRate, // sample rate
-        '-c', '1',                // channels
+        '-c', options.channels,   // channels
         '-t', 'wav',              // audio type
         '-f', 'S16_LE',           // Sample format
         '-'                       // pipe
@@ -69,7 +70,8 @@ exports.start = function (options) {
   var rec = cp.stdout
 
   if (options.verbose) {
-    console.log('Recording with sample rate', options.sampleRate + '...')
+    console.log('Recording', options.channels, 'channels with sample rate',
+        options.sampleRate + '...')
     console.time('End Recording')
 
     rec.on('data', function (data) {
