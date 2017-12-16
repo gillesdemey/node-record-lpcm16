@@ -68,7 +68,10 @@ exports.start = function (options) {
   }
   cp = spawn(cmd, cmdArgs, cmdOptions)
   var rec = cp.stdout
-
+	// capture any process error on stdout, issue 44
+	rec.on('error', function(data){
+		// rec.emit('error', data.toString())
+	})
   if (options.verbose) {
     console.log('Recording', options.channels, 'channels with sample rate',
         options.sampleRate + '...')
