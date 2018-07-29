@@ -28,6 +28,21 @@ exports.start = function (options) {
     // On some Windows machines, sox is installed using the "sox" binary
     // instead of "rec"
     case 'sox':
+      var cmd = 'sox';
+      var cmdArgs = [
+        '-q',                     // show no progress
+        '-t', 'waveaudio',        // audio type
+        '-d',                     // use default recording device
+        '-r', options.sampleRate, // sample rate
+        '-c', options.channels,   // channels
+        '-e', 'signed-integer',   // sample encoding
+        '-b', '16',               // precision (bits)
+        '-',                      // pipe
+        // end on silence
+        'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
+        '1', options.silence, options.thresholdEnd || options.threshold + '%'
+      ];
+      break
     case 'rec':
     default:
       cmd = options.recordProgram
@@ -39,7 +54,7 @@ exports.start = function (options) {
         '-b', '16',               // precision (bits)
         '-t', 'wav',              // audio type
         '-',                      // pipe
-            // end on silence
+        // end on silence
         'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
         '1', options.silence, options.thresholdEnd || options.threshold + '%'
       ]
