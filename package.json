@@ -1,6 +1,6 @@
 {
   "name": "node-record-lpcm16",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "description": "",
   "main": "index.js",
   "dependencies": {},
