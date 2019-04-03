@@ -35,7 +35,7 @@ thresholdStart: null   // silence threshold to start recording, overrides thresh
 thresholdEnd  : null   // silence threshold to end recording, overrides threshold (rec only)
 silence       : '1.0'  // seconds of silence before ending
 verbose       : false  // log info to the console
-recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
+recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord', 'sox' and 'parec'
 device        : null   // recording device (e.g.: 'plughw:1')
 ```
 

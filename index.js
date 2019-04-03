@@ -74,6 +74,18 @@ exports.start = function (options) {
         cmdArgs.unshift('-D', options.device)
       }
       break
+    // PulseAudio
+    case 'parec':
+      cmd = 'parec'
+      cmdArgs = [
+        '--rate', options.sampleRate,   // sample rate
+        '--channels', options.channels, // channels
+        '--format', 's16le',            // sample format
+      ]
+      if (options.device) {
+        cmdArgs.unshift('--device', options.device)
+      }
+      break
   }
 
   // Spawn audio capture command
