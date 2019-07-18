@@ -28,15 +28,16 @@ This module requires you to install [SoX](http://sox.sourceforge.net) and it mus
 ## Options
 
 ```
-sampleRate    : 16000  // audio sample rate
-channels      : 1      // number of channels
-threshold     : 0.5    // silence threshold (rec only)
-thresholdStart: null   // silence threshold to start recording, overrides threshold (rec only)
-thresholdEnd  : null   // silence threshold to end recording, overrides threshold (rec only)
-silence       : '1.0'  // seconds of silence before ending
-verbose       : false  // log info to the console
-recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
-device        : null   // recording device (e.g.: 'plughw:1')
+sampleRate            : 16000  // audio sample rate
+channels              : 1      // number of channels
+threshold             : 0.5    // silence threshold (rec only)
+endOnSilence          : false  // automatically end on silence (if supported)
+thresholdStart        : null   // silence threshold to start recording, overrides threshold (rec only)
+thresholdEnd          : null   // silence threshold to end recording, overrides threshold (rec only)
+silence               : '1.0'  // seconds of silence before ending
+recorder              : 'sox'  // Defaults to 'sox'
+device                : null   // recording device (e.g.: 'plughw:1')
+audioType             : 'wav'  // audio type to record
 ```
 
 > Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`).
@@ -44,55 +45,107 @@ device        : null   // recording device (e.g.: 'plughw:1')
 ## Usage
 
 ```javascript
-var record = require('node-record-lpcm16')
-var fs = require('fs')
+const recorder = require('node-record-lpcm16')
+const fs = require('fs')
 
-var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
+const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start({
-  sampleRate : 44100,
-  verbose : true
+recorder.record({
+  sampleRate: 44100
 })
+.stream()
 .pipe(file)
 ```
 
-The library will automatically attempt to stop when it encounters silence, if not you can stop the recording manually.
+You can pause, resume and stop the recording manually.
 
 ```javascript
-var record = require('node-record-lpcm16')
-var fs = require('fs')
+const recorder = require('node-record-lpcm16')
+const fs = require('fs')
 
-var file = fs.createWriteStream('test.wav', { encoding: 'binary' })
+const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-record.start().pipe(file)
+const recording = recorder.record()
+recording.stream().pipe(file)
+
+// Pause recording after one second
+setTimeout(() => {
+  recording.pause()
+}, 1000)
+
+// Resume another second later
+setTimeout(() => {
+  recording.resume()
+}, 2000)
 
 // Stop recording after three seconds
-setTimeout(function () {
-  record.stop()
+setTimeout(() => {
+  recording.stop()
 }, 3000)
 ```
-This module uses Node.js streams, if you're unfamiliar with them I'd suggest reading Substack's excellent [stream handbook](https://github.com/substack/stream-handbook).
+
+## Recorders
+
+The following recorders are included:
+
+* rec
+* sox
+* arecord
+
+**Note:** not all recorders support all features!
+
+## Error handling
+
+Some recorders might be logging errors to `stderr` and throw an exit code.
+You can catch early termination by adding an error event listener to the stream.
+
+To debug the recorder see [debugging](#debugging) below.
+
+```javascript
+recording.stream()
+  .on('error', err => {
+    console.error('recorder threw an error:', err)
+  })
+  .pipe(file)
+```
+
+## Debugging
+
+Debug logging is implemented with [visionmedia/debug](https://github.com/visionmedia/debug)
+
+`DEBUG=record node examples/file.js`
 
 ## Example
 
 Here's how you can write your own Siri in just 10 lines of code.
 
 ```javascript
-var rec = require('node-record-lpcm16')
-var request = require('request')
+const recorder = require('../')
+const request = require('request')
 
-var witToken = process.env.WIT_TOKEN; // get one from wit.ai!
+const witToken = process.env.WIT_TOKEN // get one from wit.ai!
 
-exports.parseResult = function (err, resp, body) {
+function parseResult (err, resp, body) {
+  if (err) console.error(err)
   console.log(body)
 }
 
-rec.start().pipe(request.post({
-  'url'     : 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
-  'headers' : {
-    'Accept'        : 'application/vnd.wit.20160202+json',
-    'Authorization' : 'Bearer ' + witToken,
-    'Content-Type'  : 'audio/wav'
-  }
-}, exports.parseResult))
+const recording = recorder.record({
+  recorder: 'arecord'
+})
+
+recording
+  .stream()
+  .pipe(request.post({
+    'url': 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
+    'headers': {
+      'Accept': 'application/vnd.wit.20160202+json',
+      'Authorization': `Bearer ${witToken}`,
+      'Content-Type': 'audio/wav'
+    }
+  }, parseResult))
+
+setTimeout(() => {
+  recording.stop()
+}, 3000) // Stop after three seconds of recording
 ```

@@ -1,11 +1,19 @@
 {
   "name": "node-record-lpcm16",
+  "author": "Gilles De Mey",
   "version": "0.3.1",
-  "description": "",
+  "description": "Record a microphone input stream",
+  "license": "ISC",
   "main": "index.js",
-  "dependencies": {},
-  "devDependencies": {},
-  "scripts": {},
+  "dependencies": {
+    "debug": "^2.6.8"
+  },
+  "devDependencies": {
+    "standard": "^13.0.2"
+  },
+  "scripts": {
+    "test": "standard"
+  },
   "keywords": [
     "sox",
     "audio",
@@ -16,13 +24,8 @@
     "type": "git",
     "url": "https://github.com/gillesdemey/node-record-lpcm16"
   },
-  "author": "Gilles De Mey",
-  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gillesdemey/node-record-lpcm16/issues"
   },
-  "homepage": "https://github.com/gillesdemey/node-record-lpcm16",
-  "directories": {
-    "example": "examples"
-  }
+  "homepage": "https://github.com/gillesdemey/node-record-lpcm16"
 }
