@@ -37,6 +37,7 @@ thresholdEnd          : null   // silence threshold to end recording, overrides 
 silence               : '1.0'  // seconds of silence before ending
 recorder              : 'sox'  // Defaults to 'sox'
 device                : null   // recording device (e.g.: 'plughw:1')
+audioType             : 'wav'  // audio type to record
 ```
 
 > Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`).

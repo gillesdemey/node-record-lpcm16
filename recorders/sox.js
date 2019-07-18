@@ -8,7 +8,7 @@ module.exports = (options) => {
     '--channels', options.channels, // channels
     '--encoding', 'signed-integer', // sample encoding
     '--bits', '16', // precision (bits)
-    '--type', 'wav', // audio type
+    '--type', options.audioType, // audio type
     '-' // pipe
   ]
 

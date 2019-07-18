@@ -6,7 +6,7 @@ module.exports = (options) => {
     '-q', // show no progress
     '-r', options.sampleRate, // sample rate
     '-c', options.channels, // channels
-    '-t', 'wav', // audio type
+    '-t', options.audioType, // audio type
     '-f', 'S16_LE', // Sample format
     '-' // pipe
   ]
