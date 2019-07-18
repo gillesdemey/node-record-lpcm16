@@ -5,10 +5,12 @@ const fs = require('fs')
 
 const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
-const recording = recorder.record()
+const recording = recorder.record({
+  recordProgram: 'rec'
+})
 recording.stream().pipe(file)
 
 // Stop recording after three seconds and write to file
 setTimeout(() => {
   recording.stop()
-}, 3000)
+}, 2000)

@@ -4,6 +4,11 @@ const assert = require('assert')
 const debug = require('debug')('record')
 const { spawn } = require('child_process')
 
+const recorders = {
+  rec: require('./recorders/rec'),
+  sox: require('./recorders/sox')
+}
+
 class Recording {
   constructor (options = {}) {
     const defaults = {
@@ -20,44 +25,7 @@ class Recording {
     this.options = options = Object.assign(defaults, options)
 
     // Capture audio stream
-    let cmd, cmdArgs, cmdOptions
-
-    switch (options.recordProgram) {
-      // On some Windows machines, sox is installed using the "sox" binary
-      // instead of "rec"
-      case 'sox':
-      case 'rec':
-      default:
-        cmd = options.recordProgram
-        cmdArgs = [
-          '-q',                     // show no progress
-          '-r', options.sampleRate, // sample rate
-          '-c', options.channels,   // channels
-          '-e', 'signed-integer',   // sample encoding
-          '-b', '16',               // precision (bits)
-          '-t', 'wav',              // audio type
-          '-',                      // pipe
-          // end on silence
-          'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
-          '1', options.silence, options.thresholdEnd || options.threshold + '%'
-        ]
-        break
-      // On some systems (RasPi), arecord is the prefered recording binary
-      case 'arecord':
-        cmd = 'arecord'
-        cmdArgs = [
-          '-q',                     // show no progress
-          '-r', options.sampleRate, // sample rate
-          '-c', options.channels,   // channels
-          '-t', 'wav',              // audio type
-          '-f', 'S16_LE',           // Sample format
-          '-'                       // pipe
-        ]
-        if (options.device) {
-          cmdArgs.unshift('-D', options.device)
-        }
-        break
-    }
+    let cmdOptions
 
     // Spawn audio capture command
     cmdOptions = { encoding: 'binary' }
@@ -65,13 +33,13 @@ class Recording {
       cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device })
     }
 
-    this.cmd = cmd
-    this.cmdArgs = cmdArgs
+    this.cmd = options.recordProgram
+    this.cmdArgs = recorders[options.recordProgram](this.options)
     this.cmdOptions = cmdOptions
 
     debug(`Started recording`)
     debug(this.options)
-    debug(` ${cmd} ${cmdArgs.join(' ')}`)
+    debug(` ${this.cmd} ${this.cmdArgs.join(' ')}`)
 
     return this.start()
   }

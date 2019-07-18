@@ -2,12 +2,13 @@
   "name": "node-record-lpcm16",
   "version": "1.0.0",
   "description": "Record a microphone input stream",
+  "license": "ISC",
   "main": "index.js",
   "dependencies": {
     "debug": "^2.6.8"
   },
   "devDependencies": {
-    "standard": "^10.0.2"
+    "standard": "^13.0.2"
   },
   "scripts": {
     "lint": "standard",
