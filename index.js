@@ -8,6 +8,7 @@ class Recording {
   constructor (options = {}) {
     const defaults = {
       sampleRate: 16000,
+      channels: 1,
       compress: false,
       threshold: 0.5,
       thresholdStart: null,
@@ -31,7 +32,7 @@ class Recording {
         cmdArgs = [
           '-q',                     // show no progress
           '-r', options.sampleRate, // sample rate
-          '-c', '1',                // channels
+          '-c', options.channels,   // channels
           '-e', 'signed-integer',   // sample encoding
           '-b', '16',               // precision (bits)
           '-t', 'wav',              // audio type
@@ -47,7 +48,7 @@ class Recording {
         cmdArgs = [
           '-q',                     // show no progress
           '-r', options.sampleRate, // sample rate
-          '-c', '1',                // channels
+          '-c', options.channels,   // channels
           '-t', 'wav',              // audio type
           '-f', 'S16_LE',           // Sample format
           '-'                       // pipe
@@ -69,6 +70,7 @@ class Recording {
     this.cmdOptions = cmdOptions
 
     debug(`Started recording`)
+    debug(this.options)
     debug(` ${cmd} ${cmdArgs.join(' ')}`)
 
     return this.start()
