@@ -58,3 +58,7 @@ node_modules
 
 # PHPStorm files
 .idea
+
+# lock files
+yarn.lock
+package-lock.json
