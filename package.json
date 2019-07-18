@@ -12,8 +12,7 @@
     "standard": "^13.0.2"
   },
   "scripts": {
-    "lint": "standard",
-    "test": "npm run lint"
+    "test": "standard"
   },
   "keywords": [
     "sox",
