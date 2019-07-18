@@ -28,15 +28,15 @@ This module requires you to install [SoX](http://sox.sourceforge.net) and it mus
 ## Options
 
 ```
-sampleRate    : 16000  // audio sample rate
-channels      : 1      // number of channels
-channels      : 1      // number of channels
-threshold     : 0.5    // silence threshold (rec only)
-thresholdStart: null   // silence threshold to start recording, overrides threshold (rec only)
-thresholdEnd  : null   // silence threshold to end recording, overrides threshold (rec only)
-silence       : '1.0'  // seconds of silence before ending
-recordProgram : 'rec'  // Defaults to 'rec' - also supports 'arecord' and 'sox'
-device        : null   // recording device (e.g.: 'plughw:1')
+sampleRate            : 16000  // audio sample rate
+channels              : 1      // number of channels
+threshold             : 0.5    // silence threshold (rec only)
+endOnSilence          : false  // automatically end on silence (if supported)
+thresholdStart        : null   // silence threshold to start recording, overrides threshold (rec only)
+thresholdEnd          : null   // silence threshold to end recording, overrides threshold (rec only)
+silence               : '1.0'  // seconds of silence before ending
+recorder              : 'sox'  // Defaults to 'sox'
+device                : null   // recording device (e.g.: 'plughw:1')
 ```
 
 > Please note that `arecord` might not work on all operating systems. If you can't capture any sound with `arecord`, try to change device (`arecord -l`).
@@ -44,7 +44,7 @@ device        : null   // recording device (e.g.: 'plughw:1')
 ## Usage
 
 ```javascript
-const recorder = require('../')
+const recorder = require('node-record-lpcm16')
 const fs = require('fs')
 
 const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
@@ -56,10 +56,10 @@ recorder.record({
 .pipe(file)
 ```
 
-The library will automatically attempt to stop when it encounters silence, if not you can stop the recording manually.
+You can pause, resume and stop the recording manually.
 
 ```javascript
-const recorder = require('../')
+const recorder = require('node-record-lpcm16')
 const fs = require('fs')
 
 const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
@@ -67,10 +67,45 @@ const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 const recording = recorder.record()
 recording.stream().pipe(file)
 
+// Pause recording after one second
+setTimeout(() => {
+  recording.pause()
+}, 1000)
+
+// Resume another second later
+setTimeout(() => {
+  recording.resume()
+}, 2000)
+
 // Stop recording after three seconds
 setTimeout(() => {
   recording.stop()
 }, 3000)
+```
+
+## Recorders
+
+The following recorders are included:
+
+* rec
+* sox
+* arecord
+
+**Note:** not all recorders support all features!
+
+## Error handling
+
+Some recorders might be logging errors to `stderr` and throw an exit code.
+You can catch early termination by adding an error event listener to the stream.
+
+To debug the recorder see [debugging](#debugging) below.
+
+```javascript
+recording.stream()
+  .on('error', err => {
+    console.error('recorder threw an error:', err)
+  })
+  .pipe(file)
 ```
 
 ## Debugging
@@ -95,7 +130,7 @@ function parseResult (err, resp, body) {
 }
 
 const recording = recorder.record({
-  recordProgram: 'arecord'
+  recorder: 'arecord'
 })
 
 recording

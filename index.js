@@ -3,11 +3,7 @@
 const assert = require('assert')
 const debug = require('debug')('record')
 const { spawn } = require('child_process')
-
-const recorders = {
-  rec: require('./recorders/rec'),
-  sox: require('./recorders/sox')
-}
+const recorders = require('./recorders')
 
 class Recording {
   constructor (options = {}) {
@@ -19,39 +15,47 @@ class Recording {
       thresholdStart: null,
       thresholdEnd: null,
       silence: '1.0',
-      recordProgram: 'rec'
+      recorder: 'sox',
+      endOnSilence: false
     }
 
-    this.options = options = Object.assign(defaults, options)
+    this.options = Object.assign(defaults, options)
 
-    // Capture audio stream
-    let cmdOptions
+    const recorder = recorders.load(this.options.recorder)
+    const { cmd, args, spawnOptions = {} } = recorder(this.options)
 
-    // Spawn audio capture command
-    cmdOptions = { encoding: 'binary' }
-    if (options.device) {
-      cmdOptions.env = Object.assign({}, process.env, { AUDIODEV: options.device })
-    }
-
-    this.cmd = options.recordProgram
-    this.cmdArgs = recorders[options.recordProgram](this.options)
-    this.cmdOptions = cmdOptions
+    this.cmd = cmd
+    this.args = args
+    this.cmdOptions = Object.assign({ encoding: 'binary', stdio: 'pipe' }, spawnOptions)
 
     debug(`Started recording`)
     debug(this.options)
-    debug(` ${this.cmd} ${this.cmdArgs.join(' ')}`)
+    debug(` ${this.cmd} ${this.args.join(' ')}`)
 
     return this.start()
   }
 
   start () {
-    const { cmd, cmdArgs, cmdOptions } = this
+    const { cmd, args, cmdOptions } = this
 
-    const cp = spawn(cmd, cmdArgs, cmdOptions)
+    const cp = spawn(cmd, args, cmdOptions)
     const rec = cp.stdout
+    const err = cp.stderr
 
     this.process = cp // expose child process
     this._stream = rec // expose output stream
+
+    cp.on('close', code => {
+      if (code === 0) return
+      rec.emit('error', `${this.cmd} has exited with error code ${code}.
+
+Enable debugging with the environment variable DEBUG=record.`
+      )
+    })
+
+    err.on('data', chunk => {
+      debug(`STDERR: ${chunk}`)
+    })
 
     rec.on('data', chunk => {
       debug(`Recording ${chunk.length} bytes`)

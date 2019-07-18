@@ -1,5 +1,7 @@
 module.exports = (options) => {
-  const args = [
+  const cmd = 'sox'
+
+  let args = [
     '--default-device',
     '--no-show-progress', // show no progress
     '--rate', options.sampleRate, // sample rate
@@ -7,11 +9,21 @@ module.exports = (options) => {
     '--encoding', 'signed-integer', // sample encoding
     '--bits', '16', // precision (bits)
     '--type', 'wav', // audio type
-    '-', // pipe
-    // end on silence
-    'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
-    '1', options.silence, options.thresholdEnd || options.threshold + '%'
+    '-' // pipe
   ]
 
-  return args
+  if (options.endOnSilence) {
+    args = args.concat([
+      'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
+      '1', options.silence, options.thresholdEnd || options.threshold + '%'
+    ])
+  }
+
+  const spawnOptions = { }
+
+  if (options.device) {
+    spawnOptions.env = { ...process.env, AUDIODEV: options.device }
+  }
+
+  return { cmd, args, spawnOptions }
 }

@@ -11,16 +11,16 @@ function parseResult (err, resp, body) {
 }
 
 const recording = recorder.record({
-  recordProgram: 'arecord'
+  recorder: 'arecord'
 })
 
 recording
   .stream()
   .pipe(request.post({
-    'url': 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
-    'headers': {
-      'Accept': 'application/vnd.wit.20160202+json',
-      'Authorization': `Bearer ${witToken}`,
+    url: 'https://api.wit.ai/speech?client=chromium&lang=en-us&output=json',
+    headers: {
+      Accept: 'application/vnd.wit.20160202+json',
+      Authorization: `Bearer ${witToken}`,
       'Content-Type': 'audio/wav'
     }
   }, parseResult))

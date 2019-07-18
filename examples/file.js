@@ -6,7 +6,8 @@ const fs = require('fs')
 const file = fs.createWriteStream('test.wav', { encoding: 'binary' })
 
 recorder.record({
-  sampleRate: 44100
+  sampleRate: 44100,
+  endOnSilence: true
 })
-.stream()
-.pipe(file)
+  .stream()
+  .pipe(file)

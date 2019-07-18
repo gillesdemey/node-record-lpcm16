@@ -1,5 +1,7 @@
 // On some systems (RasPi), arecord is the prefered recording binary
 module.exports = (options) => {
+  const cmd = 'arecord'
+
   const args = [
     '-q', // show no progress
     '-r', options.sampleRate, // sample rate
@@ -13,5 +15,5 @@ module.exports = (options) => {
     args.unshift('-D', options.device)
   }
 
-  return args
+  return { cmd, args }
 }
