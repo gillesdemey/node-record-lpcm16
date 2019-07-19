@@ -2,7 +2,7 @@ const path = require('path')
 
 function load (recorderName) {
   try {
-    const recoderPath = path.resolve('./recorders', recorderName)
+    const recoderPath = path.resolve(__dirname, recorderName)
     return require(recoderPath)
   } catch (err) {
     if (err.code === 'MODULE_NOT_FOUND') {
