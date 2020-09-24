@@ -23,7 +23,9 @@ This module requires you to install [SoX](http://sox.sourceforge.net) and it mus
 `sudo apt-get install sox libsox-fmt-all`
 
 ### For Windows
-[download the binaries](http://sourceforge.net/projects/sox/files/latest/download)
+Working version for Windows is 14.4.1. You can [download the binaries](https://sourceforge.net/projects/sox/files/sox/14.4.1/) or use [chocolately](https://chocolatey.org/install) to install the package
+
+`choco install sox.portable`
 
 ## Options
 
