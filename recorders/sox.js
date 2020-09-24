@@ -1,5 +1,9 @@
 module.exports = (options) => {
-  const cmd = 'sox'
+  let cmd = 'sox'
+
+  if (options.binPath) {
+    cmd = options.binPath;
+  }
 
   let args = [
     '--default-device',
@@ -12,11 +16,19 @@ module.exports = (options) => {
     '-' // pipe
   ]
 
+  if (options.bufferSize) {
+    args.push('--buffer', options.bufferSize);
+  }
+
   if (options.endOnSilence) {
     args = args.concat([
       'silence', '1', '0.1', options.thresholdStart || options.threshold + '%',
       '1', options.silence, options.thresholdEnd || options.threshold + '%'
     ])
+  }
+
+  if (options.arguments) {
+    args = args.concat(options.arguments);
   }
 
   const spawnOptions = { }

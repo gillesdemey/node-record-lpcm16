@@ -17,7 +17,10 @@ class Recording {
       silence: '1.0',
       recorder: 'sox',
       endOnSilence: false,
-      audioType: 'wav'
+      audioType: 'wav',
+      binPath: null,
+      bufferSize: null,
+      arguments: [],
     }
 
     this.options = Object.assign(defaults, options)
@@ -31,7 +34,10 @@ class Recording {
 
     debug(`Started recording`)
     debug(this.options)
-    debug(` ${this.cmd} ${this.args.join(' ')}`)
+
+    const command = ` ${this.cmd} ${this.args.join(' ')}`;
+    debug(command);
+    console.log('Running SOX', command);
 
     return this.start()
   }

@@ -1,5 +1,9 @@
 module.exports = (options) => {
-  const cmd = 'rec'
+  let cmd = 'rec'
+
+  if (options.binPath) {
+    cmd = options.binPath;
+  }
 
   let args = [
     '-q', // show no progress

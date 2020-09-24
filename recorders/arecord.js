@@ -1,6 +1,10 @@
 // On some systems (RasPi), arecord is the prefered recording binary
 module.exports = (options) => {
-  const cmd = 'arecord'
+  let cmd = 'arecord'
+
+  if (options.binPath) {
+    cmd = options.binPath;
+  }
 
   const args = [
     '-q', // show no progress
