@@ -17,7 +17,7 @@ class Recording {
       silence: '1.0',
       recorder: 'sox',
       endOnSilence: false,
-      audioType: 'wav'
+      audioType: 'waveaudio'
     }
 
     this.options = Object.assign(defaults, options)
